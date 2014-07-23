@@ -1,0 +1,21 @@
+.OK {
+    border:10px solid green;
+}
+
+.ALARM {
+    border:10px solid red;
+}
+
+.INSUFFICIENT_DATA {
+    border:10px solid orange;
+}
+
+.node {
+    margin-top:5px;
+    border-width:5px !important;
+}
+
+.loader
+{
+    display:none;
+}
