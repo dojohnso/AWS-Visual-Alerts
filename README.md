@@ -12,3 +12,11 @@ Create a new IAM user, give it access keys, and put those into the config/aws-sa
 Also in the aws.php file, place the SQS queue url used to receive the CloudWatch alerts, and specify (comment or uncomment) which services you are using and would like to monitor with this tool. The API is used to discover instance names and ids used with CloudWatch to match up with the UI.
 
 To maintiain persistance, Firebase is used. Place your Firebase url into the public/js/config-sample.js file and rename it to config.js. If you do not wish to have persistance and only have the states change when a message is received from CloudWatch via SQS, you can ignore this (not recommended).
+
+===
+
+Technologies used include PHP (Slim Framework), Firebase (optional), AWS PHP SDK, Twitter Bootstrap, and jQuery.
+
+===
+
+Pull requests welcome.
