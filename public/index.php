@@ -47,10 +47,10 @@ $app->get('/messages', function () use ($app, $queue_url) {
 
             $response[$i]['full'] = $message_text;
 
-            // $result = $client->deleteMessage(array(
-            //     'QueueUrl' => $queue_url,
-            //     'ReceiptHandle' => $message['ReceiptHandle'],
-            // ));
+            $result = $client->deleteMessage(array(
+                'QueueUrl' => $queue_url,
+                'ReceiptHandle' => $message['ReceiptHandle'],
+            ));
         }
     }
 
