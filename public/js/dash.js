@@ -17,7 +17,6 @@ function updateStates()
 
             var stateRef = myRootRef.child( service+'/'+node );
             stateRef.once('value', function(data) {
-                console.log(service+'/'+node);
                 if ( data.val() !== null )
                 {
                     for ( state in data.val() )
