@@ -1,9 +1,16 @@
 var myRootRef;
 $(function()
 {
-    myRootRef = new Firebase( firebase_url );
+    if ( useFirebase() )
+    {
+        myRootRef = new Firebase( firebase_url );
+        updateStates();
+    }
+    else
+    {
+        getMessages();
+    }
 
-    updateStates();
 })
 
 function updateStates()
@@ -47,13 +54,16 @@ function getMessages()
         {
             for ( m in messages )
             {
-                // store message in Firebase for current state (ex: RDS/node-name/OK)
-                var newMessage = myRootRef.child( messages[m].service + '/' + messages[m].node + '/' + messages[m].state )
-                newMessage.set( messages[m] );
+                if ( useFirebase() )
+                {
+                    // store message in Firebase for current state (ex: RDS/node-name/OK)
+                    var newMessage = myRootRef.child( messages[m].service + '/' + messages[m].node + '/' + messages[m].state )
+                    newMessage.set( messages[m] );
+                }
 
                 changeState( messages[m].state, messages[m].service, messages[m].node )
 
-                if ( messages[m].previous_state != messages[m].state )
+                if ( useFirebase() && messages[m].previous_state != messages[m].state )
                 {
                     // delete previous from Firebase to maintain a "current" state
                     var oldMessage = myRootRef.child( messages[m].service + '/' + messages[m].node + '/' + messages[m].previous_state );
@@ -113,4 +123,9 @@ function changeState( state, service, node )
 function pad (str, max) {
   str = str.toString();
   return str.length < max ? pad("0" + str, max) : str;
+}
+
+function useFirebase()
+{
+    return typeof firebase_url != 'undefined';
 }
