@@ -50,6 +50,7 @@
                 <span class="icon-bar"></span> -->
               </button>
               <a class="navbar-brand" href="#">Spartz :LXD</a>
+              <a class="navbar-brand" href="#">AWS Visual Alerts</a>
             </div>
             <!-- <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">

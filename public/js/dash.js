@@ -32,13 +32,15 @@ function updateStates()
     getMessages();
 }
 
+function pulseTitle()
+{
+    $('.navbar-brand').effect( "pulsate", {times:1}, 1000 );
+}
+
 function getMessages()
 {
-    $('.loader').show();
+    pulseTitle()
     $.get('/messages', function(data){
-
-        $('.loader').hide();
-        setTimeout( 'getMessages()', 2500 );
 
         messages = $.parseJSON(data);
         if ( messages.length )
@@ -67,6 +69,8 @@ function getMessages()
                 $.post('/messages/delete', {handle:messages[m].handle});
             }
         }
+
+        setTimeout( 'getMessages()', 2500 );
     })
 }
 
