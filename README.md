@@ -15,7 +15,7 @@ To maintiain persistance, Firebase is used. Place your Firebase url into the pub
 
 ===
 
-Technologies used include PHP (Slim Framework), Firebase (optional), AWS PHP SDK, Twitter Bootstrap, and jQuery.
+Technologies used include PHP (Slim Framework), Firebase (optional), AWS PHP SDK, Twitter Bootstrap, jQuery, and https://github.com/imsky/holder for images currently.
 
 ===
 
