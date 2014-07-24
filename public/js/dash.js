@@ -1,11 +1,40 @@
-$(function(){
-    getMessages();
+var myRootRef;
+$(function()
+{
+    myRootRef = new Firebase( firebase_url );
+
+    updateStates();
 })
 
+function updateStates()
+{
+    var latest_date = 0;
 
-function getMessages() {
+    $('.service').each(function(){
+        var service = $(this).data('service');
+        $(this).next('.nodes').find('.node').each(function(){
+            var node = $(this).data('node');
 
-    var delay = 400;
+            var stateRef = myRootRef.child( service+'/'+node );
+            stateRef.once('value', function(data) {
+                console.log(service+'/'+node);
+                if ( data.val() !== null )
+                {
+                    for ( state in data.val() )
+                    {
+                        //we have a state, lets do something with it
+                        changeState( state, service, node )
+                    }
+                }
+            });
+        });
+    });
+
+    getMessages();
+}
+
+function getMessages()
+{
     $('.loader').show();
     $.get('/messages', function(data){
 
@@ -13,33 +42,72 @@ function getMessages() {
         setTimeout( 'getMessages()', 2500 );
 
         messages = $.parseJSON(data);
-        for ( m in messages )
+        if ( messages.length )
         {
-            console.log(messages[m].service, messages[m].state)
-            switch (messages[m].state)
+            for ( m in messages )
             {
-                case 'OK':
-                    $('.'+messages[m].service).removeClass('ALARM', delay);
-                    $('.'+messages[m].service).removeClass('INSUFFICIENT_DATA', delay);
-                    $('.'+messages[m].name).removeClass('ALARM', delay);
-                    $('.'+messages[m].name).removeClass('INSUFFICIENT_DATA', delay);
-                    break;
-                case 'INSUFFICIENT_DATA':
-                    $('.'+messages[m].service).addClass('INSUFFICIENT_DATA', delay);
-                    $('.'+messages[m].service).removeClass('ALARM', delay);
-                    $('.'+messages[m].name).addClass('INSUFFICIENT_DATA', delay);
-                    $('.'+messages[m].name).removeClass('ALARM', delay);
-                    break;
-                case 'ALARM':
-                    $('.'+messages[m].service).addClass('ALARM', delay);
-                    $('.'+messages[m].service).removeClass('INSUFFICIENT_DATA', delay);
-                    $('.'+messages[m].name).addClass('ALARM', delay);
-                    $('.'+messages[m].name).removeClass('INSUFFICIENT_DATA', delay);
-                    break;
-                default:
-                    break;
+                // store message in Firebase for current state (ex: RDS/node-name/OK)
+                var newMessage = myRootRef.child( messages[m].service + '/' + messages[m].node + '/' + messages[m].state )
+                newMessage.set( messages[m] );
+
+                changeState( messages[m].state, messages[m].service, messages[m].node )
+
+                if ( messages[m].previous_state != messages[m].state )
+                {
+                    // delete previous from Firebase to maintain a "current" state
+                    var oldMessage = myRootRef.child( messages[m].service + '/' + messages[m].node + '/' + messages[m].previous_state );
+                    oldMessage.once('value', function(data) {
+                        if ( data.val() !== null )
+                        {
+                            oldMessage.remove();
+                        }
+                    });
+                }
+
+                // delete this sqs message. we're done with it
+                $.post('/messages/delete', {handle:messages[m].handle});
             }
         }
     })
 }
 
+function changeState( state, service, node )
+{
+    var delay = 400;
+    switch (state)
+    {
+        case 'OK':
+            $('.'+service).addClass('OK', delay);
+            $('.'+service).removeClass('ALARM', delay);
+            $('.'+service).removeClass('INSUFFICIENT_DATA', delay);
+
+            $('.'+node).addClass('OK', delay);
+            $('.'+node).removeClass('ALARM', delay);
+            $('.'+node).removeClass('INSUFFICIENT_DATA', delay);
+            break;
+        case 'INSUFFICIENT_DATA':
+            $('.'+service).addClass('INSUFFICIENT_DATA', delay);
+            $('.'+service).removeClass('ALARM', delay);
+            $('.'+service).removeClass('OK', delay);
+
+            $('.'+node).addClass('INSUFFICIENT_DATA', delay);
+            $('.'+node).removeClass('ALARM', delay);
+            $('.'+node).removeClass('OK', delay);
+            break;
+        case 'ALARM':
+            $('.'+service).addClass('ALARM', delay);
+            $('.'+service).removeClass('INSUFFICIENT_DATA', delay);
+            $('.'+service).removeClass('OK', delay);
+            $('.'+node).addClass('ALARM', delay);
+            $('.'+node).removeClass('INSUFFICIENT_DATA', delay);
+            $('.'+node).removeClass('OK', delay);
+            break;
+        default:
+            break;
+    }
+}
+
+function pad (str, max) {
+  str = str.toString();
+  return str.length < max ? pad("0" + str, max) : str;
+}

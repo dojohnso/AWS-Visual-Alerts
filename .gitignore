@@ -1,2 +1,4 @@
 
 config/aws.php
+
+public/js/config.js
