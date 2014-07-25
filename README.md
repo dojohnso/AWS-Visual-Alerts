@@ -15,8 +15,13 @@ To maintiain persistance, Firebase is used. Place your Firebase url into the pub
 
 ===
 
-Technologies used include [PHP](http://php.net) ([Slim Framework](http://www.slimframework.com/)), [Firebase](http://firebase.com) (optional), [AWS PHP SDK](http://docs.aws.amazon.com/aws-sdk-php), [Twitter Bootstrap](http://getbootstrap.com/), [jQuery](http://jquery.com), and [holder](https://github.com/imsky/holder) for images currently.
+Technologies used include [PHP](http://php.net) ([Slim Framework](http://www.slimframework.com/)), [Firebase](http://firebase.com) (optional), [AWS PHP SDK](http://aws.amazon.com/sdkforphp), [Twitter Bootstrap](http://getbootstrap.com/), [jQuery](http://jquery.com), [composer](https://getcomposer.org), and [holder](https://github.com/imsky/holder) for images currently.
 
 ===
+
+# Install
+* fill out and copy config/aws-sample.php to config/aws.php
+* (optional, recommended) fill out and copy public/js/config-sample.js to public/js/config.js
+* run `php composer.phar install` from the project root
 
 Pull requests welcome.
