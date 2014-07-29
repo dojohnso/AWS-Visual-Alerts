@@ -1,13 +1,13 @@
 .OK {
-    border:10px solid green;
+    border:10px solid #3d9e1e;
 }
 
 .ALARM {
-    border:10px solid red;
+    border:10px solid #c43921;
 }
 
 .INSUFFICIENT_DATA {
-    border:10px solid orange;
+    border:10px solid #edb729;
 }
 
 .node {
@@ -18,4 +18,8 @@
 .loader
 {
     display:none;
+}
+
+body {
+    background:#262626;
 }
