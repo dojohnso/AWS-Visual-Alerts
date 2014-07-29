@@ -23,5 +23,17 @@ Technologies used include [PHP](http://php.net) ([Slim Framework](http://www.sli
 * fill out and copy config/aws-sample.php to config/aws.php
 * (optional, recommended) fill out and copy public/js/config-sample.js to public/js/config.js
 * run `php composer.phar install` from the project root
+* If you're running nginx and not apache, add the following to your nginx conf file (for the index.php rewrite)
+
+```
+if (!-f $request_filename){
+    set $rule_0 1$rule_0;
+}
+if ($rule_0 = "1"){
+    rewrite ^/ /index.php last;
+}
+```
+
+===
 
 Pull requests welcome.
